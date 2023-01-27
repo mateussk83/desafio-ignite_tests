@@ -28,7 +28,6 @@ beforeEach(() => {
       password: user.password
     })
 
-    console.log(authenticatedUser)
 
     expect(authenticatedUser).toHaveProperty("token")
   })
@@ -47,7 +46,6 @@ beforeEach(() => {
       password: user.password
     })
 
-    console.log(authenticatedUser)
 
 
     }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError)
@@ -67,8 +65,6 @@ beforeEach(() => {
       email: user.email,
       password: "234"
     })
-
-    console.log(authenticatedUser)
 
 
     }).rejects.toBeInstanceOf(IncorrectEmailOrPasswordError)
