@@ -72,9 +72,10 @@ describe("Create Statement", () => {
       email: "test email",
       password: "123"
     })
+    const falseIdUser = "123123"
 
     const statement = await createStatementUseCase.execute({
-      user_id: "123132",
+      user_id: falseIdUser,
       type: OperationType.DEPOSIT,
       amount: 3000,
       description: "test deposit"
