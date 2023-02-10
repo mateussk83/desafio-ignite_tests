@@ -9,7 +9,5 @@ export interface IStatementsRepository {
   findStatementOperation: (data: IGetStatementOperationDTO) => Promise<Statement | undefined>;
   getUserBalance: (data: IGetBalanceDTO) => Promise<
     { balance: number } | { balance: number, statement: Statement[] }
-
   >;
-  transferAmount(data: ITransferAmountDTO): Promise<Statement>
 }

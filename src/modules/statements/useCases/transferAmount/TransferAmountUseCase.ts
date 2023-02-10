@@ -6,7 +6,7 @@ import { IStatementsRepository } from "../../repositories/IStatementsRepository"
 import { TransferAmountError } from "./TransferAmountError";
 
 interface IRequest {
-  id: string;
+  user_id: string;
   sender_id: string;
   amount: number,
   description: string
@@ -24,17 +24,25 @@ export class TransferAmountUseCase {
     private statementsRepository: IStatementsRepository
   ) {}
 
-  async execute({ id ,sender_id, amount, description }: IRequest): Promise<Statement> {
+  async execute({ user_id ,sender_id, amount, description }: IRequest): Promise<Statement> {
 
-    const recipientUser = await this.usersRepository.findById(id);
+    const recipientUser = await this.usersRepository.findById(user_id);
 
 
     if(!recipientUser) {
       throw new TransferAmountError.UserNotFound();
     }
 
+    const senderUser = await this.usersRepository.findById(sender_id);
+
+
+    if(!senderUser) {
+      throw new TransferAmountError.UserSenderNotFound();
+    }
+
+
     const BalanceAccount = await this.statementsRepository.getUserBalance({
-      user_id: id
+      user_id: recipientUser.id
     })
 
     if(BalanceAccount.balance < amount) {
@@ -42,11 +50,20 @@ export class TransferAmountUseCase {
     }
 
     const transfer = await this.statementsRepository.create({
+      user_id: senderUser.id,
+      sender_user_id: recipientUser.id,
       amount,
       description,
       type: OperationType.TRANSFER,
-      sender_user_id: sender_id,
-      user_id: id
+    })
+
+    console.log("send: " + transfer.sender_user_id)
+
+    await this.statementsRepository.create({
+      amount,
+      description,
+      type: OperationType.TRANSFER,
+      user_id: recipientUser.id
     })
 
     return transfer

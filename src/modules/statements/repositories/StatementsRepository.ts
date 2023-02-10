@@ -21,6 +21,11 @@ export class StatementsRepository implements IStatementsRepository {
     description,
     type,
   }: ICreateStatementDTO): Promise<Statement> {
+
+    if(!sender_user_id) {
+      sender_user_id = null
+    }
+
     const statement = this.repository.create({
       user_id,
       sender_user_id,
