@@ -1,6 +1,8 @@
+import { User } from "../../../users/entities/User";
+
 export interface ITransferAmountDTO {
-  sender_id: string,
   id: string,
+  sender_id: string,
   amount: number,
   description: string
 }

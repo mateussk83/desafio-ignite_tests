@@ -13,7 +13,8 @@ export class accountsTable1616682561481 implements MigrationInterface {
         },
         {
           name: 'sender_user_id',
-          type: 'uuid'
+          type: 'uuid',
+          isNullable: true
         },
         {
           name: 'user_id',

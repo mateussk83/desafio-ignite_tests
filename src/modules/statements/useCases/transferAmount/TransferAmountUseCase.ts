@@ -1,7 +1,7 @@
 import { inject, injectable } from "tsyringe";
 
 import { IUsersRepository } from "../../../users/repositories/IUsersRepository";
-import { OperationType } from "../../entities/Statement";
+import { OperationType, Statement } from "../../entities/Statement";
 import { IStatementsRepository } from "../../repositories/IStatementsRepository";
 import { TransferAmountError } from "./TransferAmountError";
 
@@ -24,7 +24,8 @@ export class TransferAmountUseCase {
     private statementsRepository: IStatementsRepository
   ) {}
 
-  async execute({ id ,sender_id, amount, description }: IRequest){
+  async execute({ id ,sender_id, amount, description }: IRequest): Promise<Statement> {
+
     const recipientUser = await this.usersRepository.findById(id);
 
 
@@ -40,9 +41,14 @@ export class TransferAmountUseCase {
       throw new TransferAmountError.insufficientFundsError()
     }
 
-    const transfer = await this.statementsRepository.transferAmount()
+    const transfer = await this.statementsRepository.create({
+      amount,
+      description,
+      type: OperationType.TRANSFER,
+      sender_user_id: sender_id,
+      user_id: id
+    })
 
-
-
+    return transfer
   }
 }
